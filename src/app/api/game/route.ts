@@ -3,7 +3,10 @@ import { getAuthSession } from "@/lib/nextauth";
 import { quizCreationSchema } from "@/schemas/forms/quiz";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import axios from "axios";
+// import axios from "axios";
+import { generateQuestions } from "@/lib/question-generator";
+
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
@@ -36,11 +39,8 @@ export async function POST(req: Request) {
       create: { topic, count: 1 },
     });
 
-    // CALL QUESTIONS API
-    const { data } = await axios.post(
-      `${process.env.API_URL}/api/questions`,
-      { amount, topic, type }
-    );
+    // CALL QUESTIONS DIRECTLY (No HTTP call)
+    const questionsData = await generateQuestions({ amount, topic, type });
 
     interface AIQuestion {
       question: string;
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       option3?: string;
     }
 
-    const questions = (data?.questions || []) as AIQuestion[];
+    const questions = (questionsData || []) as AIQuestion[];
 
     if (!questions.length) {
       return NextResponse.json(

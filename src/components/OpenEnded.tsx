@@ -34,7 +34,19 @@ const OpenEnded = ({ game }: Props) => {
   const [averagePercentage, setAveragePercentage] = React.useState(0);
   const [now, setNow] = React.useState(new Date());
 
-  const currentQuestion = game.questions[questionIndex];
+  const currentQuestion = React.useMemo(() => {
+    return game.questions[questionIndex];
+  }, [questionIndex, game.questions]);
+
+
+  if (!currentQuestion) {
+    return (
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+        <p>Error: No questions found for this game.</p>
+        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
+      </div>
+    );
+  }
 
   // ---------- PICK RANDOM KEYWORDS ----------
   const keywords = React.useMemo(() => {

@@ -12,6 +12,7 @@ import { Input } from './ui/input'
 import { BookOpen, CopyCheck } from 'lucide-react'
 import { Separator } from '@radix-ui/react-separator'
 import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import LoadingQuestions from './LoadingQuestions'
@@ -53,7 +54,7 @@ export const QuizCreation = ({ topicParam }: Props) => {
   });
 
   function onSubmit(input: Input) {
-    setShowLoader(true)
+    setShowLoader(true);
     getQuestions(
       {
         amount: input.amount,
@@ -61,17 +62,28 @@ export const QuizCreation = ({ topicParam }: Props) => {
         type: input.type,
       },
       {
-        onSuccess: (data) => {
+        onSuccess: ({ gameId }) => {
           setFinished(true);
-          if (form.getValues("type") == "open_ended") {
-            router.push(`/play/open-ended/${data.gameId}`);
-          } else {
-            router.push(`/play/mcq/${data.gameId}`);
-          }
+          setTimeout(() => {
+            if (form.getValues("type") === "open_ended") {
+              router.push(`/play/open-ended/${gameId}`);
+            } else {
+              router.push(`/play/mcq/${gameId}`);
+            }
+          }, 2000); // 2s delay for "finished" animation if needed
         },
-        onError: () => {
-          setShowLoader(false)
-        }
+        onError: (err) => {
+          setShowLoader(false);
+          // Show meaningful error to user
+          if (axios.isAxiosError(err) && err.response?.data?.error) {
+            // Error from our API
+            toast.error(err.response.data.error);
+          } else {
+            // Generic fallback
+            toast.error("Something went wrong. Please try again later.");
+          }
+          console.error("Game creation failed:", err);
+        },
       }
     );
   }

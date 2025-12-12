@@ -526,12 +526,24 @@ const MCQ = ({ game }: Props) => {
     return () => clearInterval(interval);
   }, [hasEnded]);
 
-  const currentQuestion = React.useMemo(() => game.questions[questionIndex], [game.questions, questionIndex]);
+  const currentQuestion = React.useMemo(() => {
+    return game.questions[questionIndex];
+  }, [questionIndex, game.questions]);
 
   const options = React.useMemo(() => {
     if (!currentQuestion) return [];
+    if (!currentQuestion.options) return [];
     return JSON.parse(currentQuestion.options as string) as string[];
   }, [currentQuestion]);
+
+  if (!currentQuestion) {
+    return (
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+        <p>Error: No questions found for this game.</p>
+        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
+      </div>
+    );
+  }
 
   // Load fresh options for each question
   React.useEffect(() => {
@@ -783,7 +795,7 @@ const MCQ = ({ game }: Props) => {
               isCorrectOption={submitted && isCorrect && selectedChoice === index}
               isWrongSelected={submitted && !isCorrect && selectedChoice === index}
               submitted={submitted}
-              onOptionClick={handleOptionClick}
+              onClick={() => handleOptionClick(index)}
             />
           );
         })}
