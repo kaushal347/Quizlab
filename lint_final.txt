@@ -1,0 +1,26 @@
+
+D:\quizlab\src\app\api\game\route.ts
+  57:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  92:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  98:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\quizlab\src\app\page.tsx
+  1:10  warning  'Button' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\quizlab\src\components\HistoryComponent.tsx
+  5:8  warning  'MCQCounter' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\quizlab\src\components\QuizBackground3D.tsx
+  5:17  warning  'Dodecahedron' is defined but never used  @typescript-eslint/no-unused-vars
+  5:31  warning  'Octahedron' is defined but never used    @typescript-eslint/no-unused-vars
+  5:43  warning  'Torus' is defined but never used         @typescript-eslint/no-unused-vars
+
+D:\quizlab\src\components\QuizCreation.tsx
+   8:55  warning  'FormDescription' is defined but never used  @typescript-eslint/no-unused-vars
+  13:10  warning  'Separator' is defined but never used        @typescript-eslint/no-unused-vars
+
+D:\quizlab\src\components\ui\AuroraBackground.tsx
+  3:10  warning  'motion' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 11 problems (3 errors, 8 warnings)
+
