@@ -520,8 +520,9 @@ const MCQ = ({ game }: Props) => {
 
   // TIMER
   React.useEffect(() => {
+    if (hasEnded) return;
     const interval = setInterval(() => {
-      if (!hasEnded) setNow(new Date());
+      setNow(new Date());
     }, 1000);
     return () => clearInterval(interval);
   }, [hasEnded]);

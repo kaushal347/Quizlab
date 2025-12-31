@@ -16,27 +16,38 @@ const LoadingQuestions = ({ finished }: Props) => {
   const [progress, setProgress] = React.useState(10);
   const [loadingText, setLoadingText] = React.useState(loadingTexts[0]);
   React.useEffect(() => {
+    let active = true;
     const interval = setInterval(() => {
+      if (!active) return;
       const randomIndex = Math.floor(Math.random() * loadingTexts.length);
       setLoadingText(loadingTexts[randomIndex]);
-    }, 2000);
-    return () => clearInterval(interval);
+    }, 2500);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, []);
 
   React.useEffect(() => {
+    if (finished) {
+      setProgress(100);
+      return;
+    }
+    let active = true;
     const interval = setInterval(() => {
+      if (!active) return;
       setProgress((prev) => {
-        if (finished) return 100;
-        if (prev === 100) {
-          return 0;
-        }
+        if (prev >= 100) return 0;
         if (Math.random() < 0.1) {
           return prev + 2;
         }
         return prev + 0.5;
       });
-    }, 100);
-    return () => clearInterval(interval);
+    }, 200);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [finished]);
 
   return (
