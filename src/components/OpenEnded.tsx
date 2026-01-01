@@ -49,6 +49,7 @@ const OpenEnded = ({ game }: Props) => {
   }
 
   // ---------- PICK RANDOM KEYWORDS ----------
+
   const keywords = React.useMemo(() => {
     const words = keyword_extractor.extract(currentQuestion.answer, {
       language: "english",
@@ -56,7 +57,11 @@ const OpenEnded = ({ game }: Props) => {
       return_changed_case: false,
       remove_duplicates: false,
     });
-
+    // Always ensure at least one keyword (fallback: first word of answer)
+    if (words.length === 0) {
+      const firstWord = currentQuestion.answer.split(" ")[0];
+      return [firstWord];
+    }
     return words.sort(() => 0.5 - Math.random()).slice(0, 2);
   }, [currentQuestion.answer]);
 

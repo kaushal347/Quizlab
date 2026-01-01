@@ -24,8 +24,9 @@ export async function generateQuestions({ amount, topic, type }: QuestionGenerat
        - NO duplicate options.
        - NO repeated values.
        - NO empty or placeholder options.`
-            : `Provide ONE hard open-ended question about ${topic}. 
-       You MUST return ONLY JSON with fields: question, answer.`
+              : `Provide ONE hard fill-in-the-blank question about ${topic}. 
+          The question MUST contain a blank as '_____'.
+          You MUST return ONLY JSON with fields: question (with the blank), answer (the correct word/phrase for the blank).`
     );
 
     questions = await strict_output(

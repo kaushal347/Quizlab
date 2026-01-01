@@ -101,9 +101,21 @@ export async function POST(req: Request) {
     }
 
 
-    // SAVE OPEN-ENDED QUESTIONS
+
+    // SAVE OPEN-ENDED QUESTIONS (only if question contains blank)
     if (type === "open_ended") {
-      const manyData = questions.map((q) => ({
+      const validQuestions = questions.filter(
+        (q) => typeof q.question === "string" && q.question.includes("_____") && typeof q.answer === "string" && q.answer.trim() !== ""
+      );
+
+      if (!validQuestions.length) {
+        return NextResponse.json(
+          { error: "AI did not generate any valid fill-in-the-blank questions. Please try again." },
+          { status: 500 }
+        );
+      }
+
+      const manyData = validQuestions.map((q) => ({
         question: q.question,
         answer: q.answer,
         gameId: game.id,

@@ -35,13 +35,11 @@ export default function RootLayout({
             <NoiseTexture />
             {children}
             <Toaster />
-            {/* Footer */}
-            <footer className="w-full text-center text-sm text-muted-foreground py-4">
-              © 2025 QuizLab. All rights reserved.
-              <br />
+            {/* Footer - moved inside AuroraBackground for color matching */}
+            <footer id="global-footer" className="w-full text-center text-sm text-muted-foreground py-4 mt-auto">
+              © 2025 QuizLab. All rights reserved.<br />
               Developed by Parth Patel, Suhani Desai, Shivani Shinde, Kaushal Dabhi.
             </footer>
-
           </AuroraBackground>
         </Providers>
       </body>

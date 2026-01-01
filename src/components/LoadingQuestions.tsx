@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Progress } from "./ui/progress";
 import Image from "next/image";
@@ -51,11 +52,14 @@ const LoadingQuestions = ({ finished }: Props) => {
   }, [finished]);
 
   return (
-    <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
-      <Image src={"/loading.gif"} width={400} height={400} alt="loading" />
-      <Progress value={progress} className="w-full mt-4" />
-      <h1 className="mt-2 text-xl">{loadingText}</h1>
-    </div>
+    <>
+      <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
+        <Image src={"/loading.gif"} width={400} height={400} alt="loading" />
+        <Progress value={progress} className="w-full mt-4" />
+        <h1 className="mt-2 text-xl">{loadingText}</h1>
+      </div>
+      {/* Remove loading page-specific copyright/footer. Only use global footer. */}
+    </>
   );
 };
 
