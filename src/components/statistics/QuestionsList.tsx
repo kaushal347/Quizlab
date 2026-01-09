@@ -48,7 +48,7 @@ const QuestionsList = ({ questions }: Props) => {
                       </span>
                     </TableCell>
                     {questions[0].questionType === "open_ended" ? (
-                      <TableCell className={`font-semibold text-gray-300`}>
+                      <TableCell className={`${(percentageCorrect && percentageCorrect > 75) ? "text-green-400" : "text-red-400"} font-semibold text-lg`}>
                         {userAnswer}
                       </TableCell>
                     ) : (
@@ -60,8 +60,8 @@ const QuestionsList = ({ questions }: Props) => {
                       </TableCell>
                     )}
 
-                    {percentageCorrect && (
-                      <TableCell className="text-right text-white">
+                    {(percentageCorrect !== null && percentageCorrect !== undefined) && (
+                      <TableCell className="text-right text-white font-semibold">
                         {percentageCorrect}
                       </TableCell>
                     )}

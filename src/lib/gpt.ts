@@ -1,8 +1,12 @@
 import Groq from "groq-sdk";
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: process.env.GROQ_API_KEY || "",
 });
+
+if (!process.env.GROQ_API_KEY) {
+  console.warn("⚠️ WARNING: GROQ_API_KEY is not defined in your environment variables!");
+}
 
 interface OutputFormat {
   [key: string]: string | string[] | OutputFormat;
@@ -15,12 +19,13 @@ export async function strict_output(
   model: string = "llama-3.1-8b-instant",
   temperature: number = 1,
   num_tries: number = 3,
-  verbose: boolean = false
+  verbose: boolean = true
 ): Promise<unknown[]> {
   const list_input = Array.isArray(user_prompt);
   const expectedCount = list_input ? user_prompt.length : 1;
 
   for (let attempt = 0; attempt < num_tries; attempt++) {
+    console.log(`🤖 strict_output: Attempt ${attempt + 1}/${num_tries}`);
     try {
       // 🔥 Stronger system prompt to force Groq to output N items
       const finalSystemPrompt =
@@ -40,7 +45,7 @@ export async function strict_output(
         : (user_prompt as string);
 
       const response = await groq.chat.completions.create({
-        model,
+        model: attempt === num_tries - 1 ? "llama3-8b-8192" : model, // Fallback to a super stable model on last attempt
         temperature,
         messages: [
           { role: "system", content: finalSystemPrompt },
@@ -91,9 +96,10 @@ export async function strict_output(
         continue;
       }
 
+      console.log("✅ strict_output: Successfully parsed and validated items.");
       return parsed;
     } catch (err) {
-      console.error(`strict_output ERROR (attempt ${attempt + 1}):`, err);
+      console.error(`❌ strict_output ERROR (attempt ${attempt + 1}):`, err);
     }
   }
 
