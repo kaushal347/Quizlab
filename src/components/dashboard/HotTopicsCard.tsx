@@ -9,12 +9,22 @@ import {
 import CustomWordCloud from "../CustomWordCloud";
 import { prisma } from "@/lib/db";
 
+import { unstable_cache } from "next/cache";
+
+const getHotTopics = unstable_cache(
+  async () => {
+    return await prisma.topic_count.findMany({
+      orderBy: {
+        count: "desc",
+      },
+    });
+  },
+  ["hot-topics"],
+  { revalidate: 3600, tags: ["topics"] }
+);
+
 const HotTopicsCard = async () => {
-  const topics = await prisma.topic_count.findMany({
-    orderBy: {
-      count: "desc", // optional: show hottest first
-    },
-  });
+  const topics = await getHotTopics();
 
   const formattedTopics = topics.map((topic) => ({
     text: topic.topic,

@@ -3,6 +3,12 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "./db";
 import { DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import dns from "node:dns";
+
+// Prefer IPv4 to avoid timeout issues on some networks
+if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+}
 
 declare module 'next-auth' {
     interface Session extends DefaultSession {
@@ -44,12 +50,15 @@ export const authOptions: NextAuthOptions = {
             return session;
         }
     },
-    secret: "sdfgdgfhgfcbcdgvv",
+    secret: process.env.NEXTAUTH_SECRET,
     adapter: PrismaAdapter(prisma),
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            httpOptions: {
+                timeout: 15000,
+            },
         })
     ]
 };

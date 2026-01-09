@@ -39,18 +39,10 @@ const OpenEnded = ({ game }: Props) => {
   }, [questionIndex, game.questions]);
 
 
-  if (!currentQuestion) {
-    return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
-        <p>Error: No questions found for this game.</p>
-        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
-      </div>
-    );
-  }
-
   // ---------- PICK RANDOM KEYWORDS ----------
 
   const keywords = React.useMemo(() => {
+    if (!currentQuestion) return [];
     const words = keyword_extractor.extract(currentQuestion.answer, {
       language: "english",
       remove_digits: true,
@@ -63,15 +55,16 @@ const OpenEnded = ({ game }: Props) => {
       return [firstWord];
     }
     return words.sort(() => 0.5 - Math.random()).slice(0, 2);
-  }, [currentQuestion.answer]);
+  }, [currentQuestion?.answer]);
 
   // ---------- COMPUTE BLANKS ----------
   const answerWithBlanks = React.useMemo(() => {
+    if (!currentQuestion) return "";
     return keywords.reduce(
       (acc, curr) => acc.replaceAll(curr, "_____"),
       currentQuestion.answer
     );
-  }, [keywords, currentQuestion.answer]);
+  }, [keywords, currentQuestion?.answer]);
 
   // CLEAR INPUTS WHEN QUESTION CHANGES
   React.useEffect(() => {
@@ -94,6 +87,7 @@ const OpenEnded = ({ game }: Props) => {
   // ---------- CHECK ANSWER ----------
   const { mutate: checkAnswer, isPending: isChecking } = useMutation({
     mutationFn: async () => {
+      if (!currentQuestion) throw new Error("No question found");
       let finalAnswer = answerWithBlanks;
       const inputs = document.querySelectorAll("[data-blank-input]");
 
@@ -151,6 +145,15 @@ const OpenEnded = ({ game }: Props) => {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [handleNext]);
+
+  if (!currentQuestion) {
+    return (
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+        <p>Error: No questions found for this game.</p>
+        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
+      </div>
+    );
+  }
 
   // ---------- FINISHED GAME UI ----------
   if (hasEnded) {

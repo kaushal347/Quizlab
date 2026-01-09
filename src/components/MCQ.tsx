@@ -532,19 +532,9 @@ const MCQ = ({ game }: Props) => {
   }, [questionIndex, game.questions]);
 
   const options = React.useMemo(() => {
-    if (!currentQuestion) return [];
-    if (!currentQuestion.options) return [];
+    if (!currentQuestion || !currentQuestion.options) return [];
     return JSON.parse(currentQuestion.options as string) as string[];
   }, [currentQuestion]);
-
-  if (!currentQuestion) {
-    return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
-        <p>Error: No questions found for this game.</p>
-        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
-      </div>
-    );
-  }
 
   // Load fresh options for each question
   React.useEffect(() => {
@@ -554,6 +544,7 @@ const MCQ = ({ game }: Props) => {
   // CHECK ANSWER API
   const { mutate: checkAnswer, isPending: isChecking } = useMutation({
     mutationFn: async () => {
+      if (!currentQuestion) throw new Error("No question found");
       if (selectedChoice === null) throw new Error("No option selected");
 
       const payload: z.infer<typeof checkAnswerSchema> = {
@@ -565,6 +556,15 @@ const MCQ = ({ game }: Props) => {
       return res.data as { isCorrect: boolean };
     },
   });
+
+  if (!currentQuestion) {
+    return (
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white">
+        <p>Error: No questions found for this game.</p>
+        <Button onClick={() => window.location.href = "/quiz"} className="mt-4">Go Back</Button>
+      </div>
+    );
+  }
 
   // END GAME API
   const saveEndTime = async () => {

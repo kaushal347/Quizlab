@@ -20,9 +20,12 @@ const LoadingQuestions = ({ finished }: Props) => {
     let active = true;
     const interval = setInterval(() => {
       if (!active) return;
-      const randomIndex = Math.floor(Math.random() * loadingTexts.length);
-      setLoadingText(loadingTexts[randomIndex]);
-    }, 2500);
+      setLoadingText((prev) => {
+        const currentIndex = loadingTexts.indexOf(prev);
+        const nextIndex = (currentIndex + 1) % loadingTexts.length;
+        return loadingTexts[nextIndex];
+      });
+    }, 3000);
     return () => {
       active = false;
       clearInterval(interval);
@@ -54,9 +57,11 @@ const LoadingQuestions = ({ finished }: Props) => {
   return (
     <>
       <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
-        <Image src={"/loading.gif"} width={400} height={400} alt="loading" />
+        <Image src={"/loading.gif"} width={400} height={400} alt="loading" priority />
         <Progress value={progress} className="w-full mt-4" />
-        <h1 className="mt-2 text-xl">{loadingText}</h1>
+        <h1 className="mt-4 text-xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-pulse text-center">
+          {loadingText}
+        </h1>
       </div>
       {/* Remove loading page-specific copyright/footer. Only use global footer. */}
     </>

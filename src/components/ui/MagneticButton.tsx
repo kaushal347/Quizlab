@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-export const MagneticButton = ({
+export const MagneticButton = React.memo(({
     children,
     className,
     onClick,
@@ -43,4 +43,4 @@ export const MagneticButton = ({
             {children}
         </motion.div>
     );
-};
+});

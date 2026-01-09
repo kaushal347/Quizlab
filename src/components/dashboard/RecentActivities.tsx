@@ -5,16 +5,25 @@ import { redirect } from 'next/navigation';
 import { prisma } from "@/lib/db";
 
 
+import { unstable_cache } from 'next/cache';
+
+const getGamesCount = unstable_cache(
+  async (userId: string) => {
+    return await prisma.game.count({
+      where: { userId }
+    });
+  },
+  ["games-count"],
+  { revalidate: 60, tags: ["activities"] }
+);
+
 export const RecentActivities = async () => {
   const session = await getAuthSession();
 
   if (!session?.user) {
     redirect('/');
   }
-  const gamesCount = await prisma.game.count({
-    where: { userId: session.user.id }
-
-  })
+  const gamesCount = await getGamesCount(session.user.id);
   return (
     <Card className="col-span-4 lg:col-span-3 h-full bento-card">
       <CardHeader>
