@@ -19,11 +19,19 @@ type Props = {
   formattedTopics: Word[];
 };
 
+const colors = [
+  "#22d3ee", // cyan
+  "#818cf8", // indigo
+  "#c084fc", // purple
+  "#fb7185", // rose
+  "#fbbf24", // amber
+  "#34d399", // emerald
+];
+
 const fontSizeMapper = (word: Word) =>
-  Math.log2(word.value) * 5 + 16;
+  Math.sqrt(word.value) * 15 + 16;
 
 const CustomWordCloud = ({ formattedTopics }: Props) => {
-  const { theme } = useTheme();
   const router = useRouter();
 
   if (!formattedTopics || formattedTopics.length === 0) {
@@ -35,15 +43,16 @@ const CustomWordCloud = ({ formattedTopics }: Props) => {
   }
 
   return (
-    <div className="w-full h-[550px]">
+    <div className="w-full h-[300px] md:h-[400px]">
       <WordCloud
         data={formattedTopics}
-        height={550}
-        font="Times"
+        height={400}
+        width={500}
+        font="Inter, sans-serif"
         fontSize={fontSizeMapper}
         rotate={0}
         padding={10}
-        fill={theme === "dark" ? "white" : "black"}
+        fill={() => colors[Math.floor(Math.random() * colors.length)]}
         onWordClick={(word: Word) => {
           router.push("/quiz?topic=" + word.text);
         }}

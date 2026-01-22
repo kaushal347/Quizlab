@@ -56,12 +56,21 @@ const LoadingQuestions = ({ finished }: Props) => {
 
   return (
     <>
-      <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[70vw] md:w-[60vw] flex flex-col items-center">
-        <Image src={"/loading.gif"} width={400} height={400} alt="loading" priority />
-        <Progress value={progress} className="w-full mt-4" />
-        <h1 className="mt-4 text-xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-pulse text-center">
-          {loadingText}
-        </h1>
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-xl">
+        <div className="w-[70vw] md:w-[60vw] flex flex-col items-center">
+          <Image
+            src={"/loading.gif"}
+            width={400}
+            height={400}
+            alt="loading"
+            priority
+            className="rounded-2xl shadow-2xl"
+          />
+          <Progress value={progress} className="w-full mt-8" />
+          <h1 className="mt-6 text-2xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600 animate-pulse text-center">
+            {loadingText}
+          </h1>
+        </div>
       </div>
       {/* Remove loading page-specific copyright/footer. Only use global footer. */}
     </>

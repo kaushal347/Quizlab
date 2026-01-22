@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { topic, type, amount } = quizCreationSchema.parse(body);
+    const { topic, type, amount, timeLimit } = quizCreationSchema.parse(body);
 
     // CREATE GAME ENTRY
     const game = await prisma.game.create({
@@ -29,6 +29,8 @@ export async function POST(req: Request) {
         timeStarted: new Date(),
         userId: session.user.id,
         topic,
+        // @ts-ignore
+        timeLimit,
       },
     });
 

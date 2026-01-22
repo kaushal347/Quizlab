@@ -32,13 +32,14 @@ export const QuizCreation = ({ topicParam }: Props) => {
   const [showLoader, setShowLoader] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
   const { mutate: getQuestions, isPending } = useMutation({
-    mutationFn: async ({ amount, topic, type }: Input) => {
+    mutationFn: async ({ amount, topic, type, timeLimit }: Input) => {
       const response = await axios.post('/api/game', {
         amount,
         topic,
         type,
+        timeLimit,
       });
-      return response.data; // <— data returned properly
+      return response.data;
     },
   });
 
@@ -48,6 +49,7 @@ export const QuizCreation = ({ topicParam }: Props) => {
       amount: 3,
       topic: topicParam,
       type: "open_ended",
+      timeLimit: 0,
     },
   });
 
@@ -58,6 +60,7 @@ export const QuizCreation = ({ topicParam }: Props) => {
         amount: input.amount,
         topic: input.topic,
         type: input.type,
+        timeLimit: input.timeLimit,
       },
       {
         onSuccess: ({ gameId }) => {
@@ -138,7 +141,6 @@ export const QuizCreation = ({ topicParam }: Props) => {
                     </FormItem>
                   )}
                 />
-
                 {/* Amount */}
                 <FormField
                   control={form.control}
@@ -153,12 +155,40 @@ export const QuizCreation = ({ topicParam }: Props) => {
                           type="number"
                           {...field}
                           onChange={(e) => {
-                            form.setValue("amount", parseInt(e.target.value));
+                            form.setValue("amount", parseInt(e.target.value) || 1);
                           }}
                           min={1}
                           max={10}
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Time Limit */}
+                <FormField
+                  control={form.control}
+                  name="timeLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Time Limit (Minutes)</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-cyan-500 focus:ring-cyan-500"
+                          placeholder="e.g. 5 (0 for no limit)"
+                          type="number"
+                          {...field}
+                          onChange={(e) => {
+                            form.setValue("timeLimit", parseInt(e.target.value) || 0);
+                          }}
+                          min={0}
+                          max={60}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-gray-400">
+                        Set to 0 for no time limit.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

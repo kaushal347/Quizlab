@@ -32,15 +32,17 @@ const HotTopicsCard = async () => {
   }));
 
   return (
-    <Card className="h-full bento-card">
+    <Card className="h-full bento-card hover-glow transition-all duration-300">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-white">Hot Topics</CardTitle>
+        <CardTitle className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+          Hot Topics
+        </CardTitle>
         <CardDescription className="text-gray-400">
-          Click on a topic to start a quiz on it.
+          Most popular quiz categories right now.
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="pl-2">
+      <CardContent className="flex items-center justify-center p-0">
         <CustomWordCloud formattedTopics={formattedTopics} />
       </CardContent>
     </Card>

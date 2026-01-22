@@ -11,4 +11,5 @@ export const quizCreationSchema = z.object({
     }),
   type: z.enum(["mcq", "open_ended"]),
   amount: z.number().min(1).max(10),
+  timeLimit: z.number().min(0).max(60), // 0 means no limit
 });

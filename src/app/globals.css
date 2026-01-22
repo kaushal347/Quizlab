@@ -41,7 +41,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --animate-aurora: aurora 60s linear infinite;
+  --animate-aurora: aurora 120s linear infinite;
 
   @keyframes aurora {
     from {
@@ -52,6 +52,13 @@
       background-position: 350% 50%, 350% 50%;
     }
   }
+}
+
+/* Optimize global performance */
+* {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
@@ -150,4 +157,33 @@
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.hover-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.4);
+  border-color: oklch(0.80 0.15 200 / 0.4);
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500;
+}
+
+@layer utilities {
+  .animate-slow-fade {
+    animation: fade 0.5s ease-in-out;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
 }
