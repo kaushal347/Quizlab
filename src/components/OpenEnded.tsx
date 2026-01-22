@@ -172,7 +172,7 @@ const OpenEnded = ({ game }: Props) => {
               </p>
               <p className="text-gray-400">
                 Time Taken: <span className="text-white font-bold">
-                  {formatTimeDelta(differenceInSeconds(now, startTime))}
+                  {formatTimeDelta(Math.max(0, differenceInSeconds(now, startTime)))}
                 </span>
               </p>
             </div>
@@ -215,7 +215,7 @@ const OpenEnded = ({ game }: Props) => {
               )}>
                 {timeLeft !== null
                   ? formatTimeDelta(timeLeft)
-                  : formatTimeDelta(differenceInSeconds(now, startTime))
+                  : formatTimeDelta(Math.max(0, differenceInSeconds(now, startTime)))
                 }
               </span>
             </div>

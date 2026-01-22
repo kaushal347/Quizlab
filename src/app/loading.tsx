@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function Loading() {
     return (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl">
             <div className="flex flex-col items-center gap-4">
                 <div className="relative">
                     <div className="absolute inset-0 blur-xl bg-cyan-500/30 animate-pulse rounded-full" />

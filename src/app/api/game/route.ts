@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const game = await prisma.game.create({
       data: {
         gameType: type,
-        timeStarted: new Date(),
+        timeStarted: new Date(), // Initial placeholder, will be updated after questions are ready
         userId: session.user.id,
         topic,
         // @ts-ignore
@@ -100,6 +100,12 @@ export async function POST(req: Request) {
       }
 
       await prisma.question.createMany({ data: manyData });
+
+      // Update timeStarted to NOW because questions are ready
+      await prisma.game.update({
+        where: { id: game.id },
+        data: { timeStarted: new Date() },
+      });
     }
 
 
@@ -125,6 +131,12 @@ export async function POST(req: Request) {
       }));
 
       await prisma.question.createMany({ data: manyData });
+
+      // Update timeStarted to NOW because questions are ready
+      await prisma.game.update({
+        where: { id: game.id },
+        data: { timeStarted: new Date() },
+      });
     }
 
     return NextResponse.json({ gameId: game.id }, { status: 200 });

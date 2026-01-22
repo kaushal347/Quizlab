@@ -315,7 +315,7 @@ const MCQ = ({ game }: Props) => {
             )}>
               {timeLeft !== null
                 ? formatTimeDelta(timeLeft)
-                : formatTimeDelta(differenceInSeconds(now, startTime))
+                : formatTimeDelta(Math.max(0, differenceInSeconds(now, startTime)))
               }
             </span>
           </div>
